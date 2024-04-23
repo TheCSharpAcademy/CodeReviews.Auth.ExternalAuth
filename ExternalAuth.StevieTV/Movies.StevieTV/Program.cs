@@ -27,6 +27,11 @@ builder.Services.AddAuthentication()
     {
         googleOptions.ClientId = builder.Configuration.GetValue<string>("Authentication:Google:ClientId","") ?? throw new InvalidOperationException("Google ClientId Missing");
         googleOptions.ClientSecret = builder.Configuration.GetValue<string>("Authentication:Google:ClientSecret","") ?? throw new InvalidOperationException("Google ClientSecret Missing");
+    })
+    .AddFacebook(facebookOptions =>
+    {
+        facebookOptions.AppId = builder.Configuration.GetValue<string>("Authentication:Facebook:AppId") ?? throw new InvalidOperationException("Facebook AppId Missing");
+        facebookOptions.AppSecret = builder.Configuration.GetValue<string>("Authentication:Facebook:AppSecret") ?? throw new InvalidOperationException("Facebook AppSecret Missing");
     });
 
 
