@@ -37,6 +37,11 @@ builder.Services.AddAuthentication()
     {
         githubOptions.ClientId = builder.Configuration.GetValue<string>("Authentication:Github:ClientId","") ?? throw new InvalidOperationException("Github ClientId Missing");
         githubOptions.ClientSecret = builder.Configuration.GetValue<string>("Authentication:Github:ClientSecret","") ?? throw new InvalidOperationException("Github ClientSecret Missing");
+    })
+    .AddMicrosoftAccount(microsoftOptions =>
+    {
+        microsoftOptions.ClientId = builder.Configuration.GetValue<string>("Authentication:Microsoft:ClientId","") ?? throw new InvalidOperationException("Microsoft ClientId Missing");
+        microsoftOptions.ClientSecret = builder.Configuration.GetValue<string>("Authentication:Microsoft:ClientSecret","") ?? throw new InvalidOperationException("Microsoft ClientSecret Missing");
     });
 
 
