@@ -32,6 +32,11 @@ builder.Services.AddAuthentication()
     {
         facebookOptions.AppId = builder.Configuration.GetValue<string>("Authentication:Facebook:AppId") ?? throw new InvalidOperationException("Facebook AppId Missing");
         facebookOptions.AppSecret = builder.Configuration.GetValue<string>("Authentication:Facebook:AppSecret") ?? throw new InvalidOperationException("Facebook AppSecret Missing");
+    })
+    .AddGitHub(githubOptions =>
+    {
+        githubOptions.ClientId = builder.Configuration.GetValue<string>("Authentication:Github:ClientId","") ?? throw new InvalidOperationException("Github ClientId Missing");
+        githubOptions.ClientSecret = builder.Configuration.GetValue<string>("Authentication:Github:ClientSecret","") ?? throw new InvalidOperationException("Github ClientSecret Missing");
     });
 
 
