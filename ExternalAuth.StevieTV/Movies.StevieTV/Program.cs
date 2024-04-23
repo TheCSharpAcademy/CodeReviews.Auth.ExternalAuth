@@ -42,6 +42,11 @@ builder.Services.AddAuthentication()
     {
         microsoftOptions.ClientId = builder.Configuration.GetValue<string>("Authentication:Microsoft:ClientId","") ?? throw new InvalidOperationException("Microsoft ClientId Missing");
         microsoftOptions.ClientSecret = builder.Configuration.GetValue<string>("Authentication:Microsoft:ClientSecret","") ?? throw new InvalidOperationException("Microsoft ClientSecret Missing");
+    })
+    .AddTwitter(twitterOptions =>
+    {
+        twitterOptions.ClientId = builder.Configuration.GetValue<string>("Authentication:Twitter:ClientId","") ?? throw new InvalidOperationException("Twitter ClientId Missing");
+        twitterOptions.ClientSecret = builder.Configuration.GetValue<string>("Authentication:Twitter:ClientSecret","") ?? throw new InvalidOperationException("Twitter ClientSecret Missing");
     });
 
 
