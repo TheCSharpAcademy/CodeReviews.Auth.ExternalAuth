@@ -48,19 +48,20 @@
 {
     <h4>Add another service to log in.</h4>
     <hr />
-    <form class="form-horizontal" action="Account/Manage/LinkExternalLogin" method="post">
-        <AntiforgeryToken />
-        <div>
-            <p>
-                @foreach (var provider in otherLogins)
-                {
-                    <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" Name="Provider" Value="@provider.Name" Title="@($"Log in using your {provider.DisplayName} account")">
-                        @provider.DisplayName
-                    </FluentButton>
-                }
-            </p>
-        </div>
-    </form>
+    @foreach (var provider in otherLogins)
+    {
+        <form class="form-horizontal" action="Account/Manage/LinkExternalLogin" method="post">
+            <AntiforgeryToken/>
+            <input type="hidden" name="Provider" value="@provider.Name" />
+            <div>
+                <p>
+                    <button type="submit" class="fluent-button accent">
+                        Log in using your @provider.DisplayName account
+                    </button>
+                </p>
+            </div>
+        </form>
+    }
 }
 
 @code {
