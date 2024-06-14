@@ -1,0 +1,59 @@
+﻿@page "/user/delete"
+@using ProductManagement.Services
+@using ProductManagement.Data
+@using Microsoft.EntityFrameworkCore
+
+@using Microsoft.AspNetCore.Authorization
+@inject UserService _userService
+@inject NavigationManager NavigationManager
+
+
+@attribute [Authorize(Roles = "Admin")]
+<PageTitle>Delete</PageTitle>
+
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>User</h4>
+    <hr />
+    @if (user is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <dl class="row">
+            <dt class="col-sm-2">Name</dt>
+            <dd class="col-sm-10">@user.Email</dd>
+        </dl>
+       
+        <EditForm method="post" Model="user" OnValidSubmit="DeleteUserById" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(user is null)">Delete</button> |
+            <a href="/products">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+   ApplicationUser? user;
+
+    [SupplyParameterFromQuery]
+    public string Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await _userService.GetUserById(Id);
+
+        if (user is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    public async Task DeleteUserById()
+    {
+        await _userService.DeleteUser(user.Id);
+        
+        NavigationManager.NavigateTo("/administration");
+    }
+}

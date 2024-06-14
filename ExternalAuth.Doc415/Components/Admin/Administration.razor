@@ -1,0 +1,67 @@
+﻿@page "/administration"
+@rendermode InteractiveServer
+@using ProductManagement.Data
+@using ProductManagement.Models
+@using ProductManagement.Services
+@using Microsoft.AspNetCore.Authorization
+
+@inject UserService _userService
+@inject NavigationManager navManager
+@attribute [Authorize(Roles = "Admin")]
+<h3>administration</h3>
+<p>
+    <a href="user/register">Create New User</a>
+</p>
+
+
+<FluentDataGrid Items="@UserList" style="width: 900px;">
+
+    <Microsoft.FluentUI.AspNetCore.Components.TemplateColumn Sortable="true" SortBy="@sortByName" Title="Name">
+        <div class="flex items-center">
+            <strong>@context.Email</strong>
+            
+        </div>
+    </Microsoft.FluentUI.AspNetCore.Components.TemplateColumn>
+    <Microsoft.FluentUI.AspNetCore.Components.TemplateColumn Sortable="true"  Title="Role">
+        <div class="flex items-center">
+            <strong>@context.Role</strong>
+
+        </div>
+    </Microsoft.FluentUI.AspNetCore.Components.TemplateColumn>
+    <Microsoft.FluentUI.AspNetCore.Components.TemplateColumn Title="Management">
+        <div class="flex items-right">
+            <FluentButton Appearance="Appearance.Accent" @onclick="@(() => UpdateUser(context.Id))">Update</FluentButton>
+            <FluentButton Appearance="Appearance.Accent" @onclick="@(() => DeleteUser(context.Id))">Delete</FluentButton>
+        </div>
+    </Microsoft.FluentUI.AspNetCore.Components.TemplateColumn>
+    
+
+
+</FluentDataGrid>
+
+@code {
+    IQueryable<UserViewModel>? UserList;
+    IQueryable<UserViewModel>? Users;
+    GridSort<UserViewModel> sortByName = GridSort<UserViewModel>
+       .ByAscending(p => p.Email);
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserList = (await _userService.GetUsers()).AsQueryable();
+        Users = UserList;
+    }
+
+    private async Task UpdateUser(string Id)
+    {
+        navManager.NavigateTo($"user/update?id={Id}");
+    }
+    private async Task DeleteUser(string Id)
+    {
+       
+            navManager.NavigateTo($"user/delete?id={Id}");
+       
+    }
+
+    
+
+}

@@ -1,0 +1,139 @@
+﻿@page "/User/Update"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using ProductManagement.Data
+@using ProductManagement.Components.Account
+@using ProductManagement.Components.Account.Pages
+@using ProductManagement.Services
+@using ProductManagement.Models
+@using Microsoft.AspNetCore.Authorization
+@inject RoleProvider _roleProvider;
+
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject ILogger<Register> Logger
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject UserService _userService
+<PageTitle>Edit User</PageTitle>
+
+<h1>Edit User</h1>
+
+<FluentGrid>
+
+    <FluentGridItem>
+         <FluentEditForm Model="Input"  OnValidSubmit="UpdateSelectedUser" FormName="Update" Enhance>
+            <DataAnnotationsValidator />
+          
+            <FluentValidationSummary class="text-danger" role="alert" />
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentTextField Name="Input.Email" @bind-value="Input.Email" AutoComplete="username" Required="true" Placeholder="name@example.com" Label="Email" Style="width: 100%" />
+                <FluentValidationMessage For="() => Input.Email" class="text-danger" />
+                <FluentTextField type="password" Name="Input.Password" @bind-Value="Input.Password" AutoComplete="current-password" Required="true" Placeholder="password" Label="Password" Style="width: 100%" />
+                <FluentValidationMessage For="() => Input.Password" class="text-danger" />
+                <FluentTextField type="password" Name="Input.ConfirmPassword" @bind-Value="Input.ConfirmPassword" AutoComplete="new-password" Required="true" Placeholder="password" Label="Confirm Password" Style="width: 100%" />
+                <FluentValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                <FluentSelect TOption="string"
+                              Label="Select role"
+                              Items="@Roles"
+                              Id="role-listbox"
+                              Width="200px"
+                              Height="250px"
+                              OptionValue="@(p => p)"
+                              OptionText="@(p => p)"
+                              @bind-Value="@Input.Role" />
+
+
+
+                <FluentValidationMessage For="() => Input.Role" class="text-danger" />
+                <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" Style="width: 100%">Update User</FluentButton>
+            </FluentStack>
+        </FluentEditForm>
+    </FluentGridItem>
+</FluentGrid>
+       
+    
+
+
+@code {
+    private IEnumerable<IdentityError>? identityErrors;
+    string[] Roles;
+    private AdminInputModel? Input = new();
+    [SupplyParameterFromQuery]
+    private string? Id { get; set; }
+    private UserViewModel? user = new();
+    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+    private ApplicationUser SelectedUser = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Roles = _roleProvider.GetRoles();
+        user = (await _userService.GetUsers()).Single(x => x.Id == Id);
+        SelectedUser = await _userService.GetUserById(Id);
+        Input.Role = user.Role;
+        Input.Email = user.Email;
+
+
+        if (Input is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+
+    }
+
+
+
+    public async Task UpdateSelectedUser()
+    {
+        SelectedUser.Email = Input.Email;
+        var token = await UserManager.GeneratePasswordResetTokenAsync(SelectedUser);
+        var result = await UserManager.ResetPasswordAsync(SelectedUser, token, Input.Password);
+
+
+
+        await UserManager.RemoveFromRoleAsync(SelectedUser, user.Role);
+        await UserManager.AddToRoleAsync(SelectedUser, Input.Role);
+        await UserManager.UpdateAsync(SelectedUser);
+        
+
+        Logger.LogInformation("Admin updated user account.");
+
+       
+
+        NavigationManager.NavigateTo("/administration");
+
+        
+    }
+
+   
+
+    private sealed class AdminInputModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; } = "";
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; } = "";
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Role")]
+        public string Role { get; set; } = "";
+    }
+}

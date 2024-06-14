@@ -1,0 +1,143 @@
+﻿@page "/User/Register"
+
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using ProductManagement.Data
+@using ProductManagement.Services
+@using ProductManagement.Components.Account
+@using ProductManagement.Components.Account.Pages
+@using Microsoft.AspNetCore.Authorization
+
+@inject RoleProvider _roleProvider;
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject ILogger<Register> Logger
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@attribute [Authorize(Roles = "Admin")]
+<PageTitle>Add User</PageTitle>
+
+<h1>Add User</h1>
+
+<FluentGrid>
+    <FluentGridItem xs="8" sm="4">
+        <StatusMessage Message="@Message" />
+        <EditForm Model="Input"  method="post" OnValidSubmit="RegisterUser" FormName="register">
+            <DataAnnotationsValidator />
+            <h2>Create a new account.</h2>
+            <hr />
+            <FluentValidationSummary class="text-danger" role="alert" />
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentTextField Name="Input.Email" @bind-Value="Input.Email" AutoComplete="username" Required="true" Placeholder="name@example.com" Label="Email" Style="width: 100%" />
+                <FluentValidationMessage For="() => Input.Email" class="text-danger" />
+                <FluentTextField type="password" Name="Input.Password" @bind-Value="Input.Password" AutoComplete="current-password" Required="true" Placeholder="password" Label="Password" Style="width: 100%" />
+                <FluentValidationMessage For="() => Input.Password" class="text-danger" />
+                <FluentTextField type="password" Name="Input.ConfirmPassword" @bind-Value="Input.ConfirmPassword" AutoComplete="new-password" Required="true" Placeholder="password" Label="Confirm Password" Style="width: 100%" />
+                <FluentValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+               
+               
+                <FluentValidationMessage For="() => Input.Role" class="text-danger" />
+                <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" Style="width: 100%">Add User</FluentButton>
+            </FluentStack>
+        </EditForm>
+    </FluentGridItem>
+   
+</FluentGrid>
+
+@code {
+    string[] Roles;
+    private IEnumerable<IdentityError>? identityErrors;
+    private string? emailConfirmationLink;
+    [SupplyParameterFromForm]
+    private AdminInputModel Input { get; set; } = new() { Role = "User" };
+
+    ApplicationUser? user;
+
+    [SupplyParameterFromQuery]
+    public string Id { get; set; }
+
+    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Roles = _roleProvider.GetRoles();
+        Input.Role = "User";
+    }
+
+    public async Task RegisterUser(EditContext editContext)
+    {
+        var user = CreateUser();
+        await UserManager.AddToRoleAsync(user, Input.Role);
+        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+        var emailStore = GetEmailStore();
+        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        var result = await UserManager.CreateAsync(user, Input.Password);
+
+        if (!result.Succeeded)
+        {
+            identityErrors = result.Errors;
+            return;
+        }
+
+        var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+     
+        var resultForEmail = await UserManager.ConfirmEmailAsync(user, code);
+        Logger.LogInformation("Admin created a new account with confirmed email.");
+
+        NavigationManager.NavigateTo("/administration");
+
+        
+    }
+
+    private ApplicationUser CreateUser()
+    {
+        try
+        {
+            return Activator.CreateInstance<ApplicationUser>();
+        }
+        catch
+        {
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+        }
+    }
+
+    private IUserEmailStore<ApplicationUser> GetEmailStore()
+    {
+        if (!UserManager.SupportsUserEmail)
+        {
+            throw new NotSupportedException("The default UI requires a user store with email support.");
+        }
+        return (IUserEmailStore<ApplicationUser>)UserStore;
+    }
+
+    private sealed class AdminInputModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; } = "";
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; } = "";
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Role")]
+        public string Role { get; set; } = "";
+    }
+}
