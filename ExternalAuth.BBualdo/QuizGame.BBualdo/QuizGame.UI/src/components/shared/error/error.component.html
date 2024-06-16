@@ -1,0 +1,10 @@
+<div class="flex flex-col items-center gap-6 p-4">
+  <div class="flex flex-col items-center gap-4">
+    @for (error of errorService.errors; track $index) {
+      <p class="text-center text-2xl font-bold text-red-500 md:text-4xl">
+        {{ error }}
+      </p>
+    }
+  </div>
+  <button class="btn primary-btn" (click)="retry()">Retry</button>
+</div>

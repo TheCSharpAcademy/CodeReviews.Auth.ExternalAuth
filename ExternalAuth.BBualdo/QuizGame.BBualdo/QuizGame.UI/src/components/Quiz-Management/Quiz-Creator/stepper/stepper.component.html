@@ -1,0 +1,210 @@
+<form [formGroup]="qAndAFormGroup">
+  <h1 class="text-center text-2xl font-bold md:text-4xl">Questions Creator</h1>
+  <p class="text-lg font-bold">Question {{ currentStep }}</p>
+  <div class="flex w-full gap-1">
+    @for (question of quiz!.questions; track $index) {
+      <div
+        class="step-indicator"
+        [ngClass]="{ 'step-active': currentStep >= $index + 1 }"
+      ></div>
+    }
+  </div>
+
+  <div
+    class="relative flex flex-col gap-1 border-b-2 border-purple-800/50 py-8"
+  >
+    <label class="md:text-xl" for="question">Question</label>
+    <input
+      [ngClass]="{
+        'input-error':
+          qAndAFormGroup.controls['question'].touched &&
+          qAndAFormGroup.controls['question'].errors
+      }"
+      class="input"
+      formControlName="question"
+      id="question"
+      type="text"
+    />
+    @if (qAndAFormGroup.controls["question"].touched &&
+    qAndAFormGroup.controls["question"].errors) {
+      <div class="absolute bottom-1">
+        @if (qAndAFormGroup.controls["question"].errors!["required"]) {
+          <p class="text-red-500 md:text-lg">Required field</p>
+        }
+        @if (qAndAFormGroup.controls["question"].errors!["maxlength"] ||
+        qAndAFormGroup.controls["question"].errors!["minlength"]) {
+          <p class="text-red-500 md:text-lg">
+            Must be between 6-200 characters long
+          </p>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="flex flex-col items-center gap-8 py-4">
+    <div class="relative flex flex-col gap-1 md:w-full">
+      <label class="md:text-xl" for="answer1">Answer 1</label>
+      <div class="flex items-center gap-4">
+        <input
+          [ngClass]="{
+            'input-error':
+              qAndAFormGroup.controls['answer1'].touched &&
+              qAndAFormGroup.controls['answer1'].errors
+          }"
+          class="input w-3/4"
+          formControlName="answer1"
+          id="answer1"
+          maxlength="50"
+          type="text"
+        />
+        <button
+          (click)="setCorrect(0)"
+          [ngClass]="{
+            'opacity-50': !quiz!.questions[currentStep - 1].answers[0].isCorrect
+          }"
+          class="btn correct-btn px-4 text-base md:flex-1 md:text-2xl"
+        >
+          Correct
+        </button>
+      </div>
+      <div class="absolute -bottom-7">
+        @if (qAndAFormGroup.controls["answer1"].touched &&
+        qAndAFormGroup.controls["answer1"].errors!["required"]) {
+          <p class="text-red-500 md:text-lg">Required field</p>
+        }
+        @if (qAndAFormGroup.controls["answer1"].touched &&
+        qAndAFormGroup.controls["answer1"].errors!["maxlength"]) {
+          <p class="text-red-500 md:text-lg">
+            Can't be longer than 50 characters
+          </p>
+        }
+      </div>
+    </div>
+
+    <div class="relative flex flex-col gap-1 md:w-full">
+      <label class="md:text-xl" for="answer2">Answer 2</label>
+      <div class="flex items-center gap-4">
+        <input
+          [ngClass]="{
+            'input-error':
+              qAndAFormGroup.controls['answer2'].touched &&
+              qAndAFormGroup.controls['answer2'].errors
+          }"
+          class="input w-3/4"
+          formControlName="answer2"
+          id="answer2"
+          maxlength="50"
+          type="text"
+        />
+        <button
+          (click)="setCorrect(1)"
+          [ngClass]="{
+            'opacity-50': !quiz!.questions[currentStep - 1].answers[1].isCorrect
+          }"
+          class="btn correct-btn px-4 text-base md:flex-1 md:text-2xl"
+        >
+          Correct
+        </button>
+      </div>
+      <div class="absolute -bottom-7">
+        @if (qAndAFormGroup.controls["answer2"].touched &&
+        qAndAFormGroup.controls["answer2"].errors?.["required"]) {
+          <p class="text-red-500 md:text-lg">Required field</p>
+        }
+        @if (qAndAFormGroup.controls["answer2"].touched &&
+        qAndAFormGroup.controls["answer2"].errors?.["maxlength"]) {
+          <p class="text-red-500 md:text-lg">
+            Can't be longer than 50 characters
+          </p>
+        }
+      </div>
+    </div>
+
+    <div class="relative flex flex-col gap-1 md:w-full">
+      <label class="md:text-xl" for="answer3">Answer 3</label>
+      <div class="flex w-full items-center gap-4">
+        <input
+          [ngClass]="{
+            'input-error':
+              qAndAFormGroup.controls['answer3'].touched &&
+              qAndAFormGroup.controls['answer3'].errors
+          }"
+          class="input w-3/4"
+          formControlName="answer3"
+          id="answer3"
+          maxlength="50"
+          type="text"
+        />
+        <button
+          (click)="setCorrect(2)"
+          [ngClass]="{
+            'opacity-50': !quiz!.questions[currentStep - 1].answers[2].isCorrect
+          }"
+          class="btn correct-btn px-4 text-base md:flex-1 md:text-2xl"
+        >
+          Correct
+        </button>
+      </div>
+      <div class="absolute -bottom-7">
+        @if (qAndAFormGroup.controls["answer3"].touched &&
+        qAndAFormGroup.controls["answer3"].errors?.["required"]) {
+          <p class="text-red-500 md:text-lg">Required field</p>
+        }
+        @if (qAndAFormGroup.controls["answer3"].touched &&
+        qAndAFormGroup.controls["answer3"].errors?.["maxlength"]) {
+          <p class="text-red-500 md:text-lg">
+            Can't be longer than 50 characters
+          </p>
+        }
+      </div>
+    </div>
+
+    <div class="relative flex flex-col gap-1 md:w-full">
+      <label class="md:text-xl" for="answer4">Answer 4</label>
+      <div class="flex items-center gap-4">
+        <input
+          [ngClass]="{
+            'input-error':
+              qAndAFormGroup.controls['answer4'].touched &&
+              qAndAFormGroup.controls['answer4'].errors
+          }"
+          class="input w-3/4"
+          formControlName="answer4"
+          id="answer4"
+          maxlength="50"
+          type="text"
+        />
+        <button
+          (click)="setCorrect(3)"
+          [ngClass]="{
+            'opacity-50': !quiz!.questions[currentStep - 1].answers[3].isCorrect
+          }"
+          class="btn correct-btn px-4 text-base md:flex-1 md:text-2xl"
+        >
+          Correct
+        </button>
+      </div>
+      <div class="absolute -bottom-7">
+        @if (qAndAFormGroup.controls["answer4"].touched &&
+        qAndAFormGroup.controls["answer4"].errors?.["required"]) {
+          <p class="text-red-500 md:text-lg">Required field</p>
+        }
+        @if (qAndAFormGroup.controls["answer4"].touched &&
+        qAndAFormGroup.controls["answer4"].errors?.["maxlength"]) {
+          <p class="text-red-500 md:text-lg">
+            Can't be longer than 50 characters
+          </p>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 flex items-center justify-center gap-4">
+    <button (click)="previous()" class="btn tertiary-btn">
+      {{ currentStep === 1 ? "Back" : "Previous" }}
+    </button>
+    <button (click)="next()" class="btn secondary-btn">
+      {{ currentStep === quiz!.questions.length ? "Create" : "Next" }}
+    </button>
+  </div>
+</form>
