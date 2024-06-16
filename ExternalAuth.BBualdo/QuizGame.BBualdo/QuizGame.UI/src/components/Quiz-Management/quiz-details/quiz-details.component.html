@@ -1,0 +1,33 @@
+<back-button class="black" previousPageName="Quiz List" />
+<div class="mt-6 flex w-full flex-col items-center gap-6">
+  @if (isLoading$ | async) {
+    <loading-spinner />
+  }
+  @if (isError$ | async) {
+    <app-error (retryEmitter)="retry()" />
+  }
+  @if (quiz$ | async; as quiz) {
+    <p
+      class="gradient-purple-reversed w-full border-b-2 border-black bg-clip-text py-2 text-center text-2xl font-black uppercase tracking-widest text-transparent md:text-4xl"
+    >
+      {{ quiz.name }}
+    </p>
+    <div class="flex flex-col gap-4">
+      <p class="text-xl font-bold md:text-2xl">Questions:</p>
+      <ul class="flex flex-col gap-2">
+        @for (question of quiz.questions; track $index) {
+          <li (click)="showAnswers(question)" class="question-btn">
+            {{ question.name }}
+          </li>
+        }
+      </ul>
+    </div>
+
+    <div class="mt-4 flex flex-col gap-4">
+      <!--<button class="btn secondary-btn">Add Question</button>-->
+      <button (click)="openDeleteDialog(quiz.name)" class="btn warning-btn">
+        Delete Quiz
+      </button>
+    </div>
+  }
+</div>

@@ -1,0 +1,9 @@
+<div class="flex items-center gap-2">
+  <div class="h-4 flex-1 rounded-full border border-black bg-white p-[2px]">
+    <div
+      class="gradient-amber transition-width h-full rounded-full duration-1000 ease-linear"
+      [style.width]="(timeLeft! / time!) * 100 + '%'"
+    ></div>
+  </div>
+  <p class="font-bold">00:{{ timeLeft!.toString().padStart(2, "0") }}</p>
+</div>

@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "Raleway", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply gradient-purple min-h-screen;
+  }
+
+  ::-webkit-scrollbar {
+    @apply h-2 w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-purple-300;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply gradient-purple;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply cursor-pointer rounded-full px-10 py-2 text-xl font-bold uppercase md:text-3xl;
+  }
+
+  .btn:disabled {
+    @apply cursor-default opacity-50;
+  }
+
+  .primary-btn {
+    @apply gradient-amber hover:gradient-purple-reversed border-2 border-black text-black transition-all duration-200 hover:border-amber-300 hover:text-white;
+  }
+
+  .secondary-btn {
+    @apply gradient-purple text-white transition-all duration-200 hover:opacity-80 disabled:hover:opacity-100;
+  }
+
+  .tertiary-btn {
+    @apply border-2 border-purple-800 hover:bg-purple-300;
+  }
+
+  .login-btn {
+    @apply border-2 border-black bg-white text-black hover:bg-black hover:text-white transition-all duration-200
+  }
+
+  .paginator-btn {
+    @apply gradient-purple flex h-8 w-8 items-center justify-center rounded-full text-white transition-all duration-200 hover:opacity-80 md:h-12 md:w-12;
+  }
+
+  .quiz-btn {
+    @apply gradient-amber hover:gradient-purple-reversed rounded-2xl py-4 text-center transition-transform duration-200 hover:scale-110 hover:text-white;
+  }
+
+  .question-btn {
+    @apply gradient-purple-reversed cursor-pointer rounded-2xl border-2 border-black p-4 text-center font-bold text-white transition-transform duration-200 hover:opacity-80 md:text-2xl;
+  }
+
+  .warning-btn {
+    @apply hover:gradient-red rounded-none border-2 border-red-600 text-red-600 transition-all duration-200 hover:text-white;
+  }
+
+  .correct-btn {
+    @apply gradient-green text-white;
+  }
+
+  .container {
+    @apply w-full rounded-3xl bg-white px-4 py-8;
+  }
+
+  label {
+    @apply font-bold;
+  }
+
+  .input {
+    @apply rounded-lg border-2 border-purple-800 bg-purple-600/20 px-4 text-lg font-medium tracking-widest placeholder-purple-400 md:p-4 md:text-xl;
+  }
+
+  .input-error {
+    background-color: rgb(254 202 202) !important;
+    @apply border-red-600 bg-red-200 text-red-600 placeholder-red-500;
+  }
+
+  .step-indicator {
+    @apply h-2 flex-1 rounded-full border border-black;
+  }
+
+  .step-active {
+    @apply gradient-purple;
+  }
+}
+
+@layer utilities {
+  .gradient-purple {
+    @apply bg-gradient-to-br from-blue-600 to-violet-600 to-70%;
+  }
+
+  .gradient-purple-80 {
+    @apply bg-gradient-to-br from-blue-600/80 to-violet-600/80 to-70%;
+  }
+
+  .gradient-purple-reversed {
+    @apply bg-gradient-to-tl from-blue-600 to-violet-600 to-70%;
+  }
+
+  .gradient-amber {
+    @apply bg-gradient-to-t from-amber-500 to-amber-300;
+  }
+
+  .gradient-red {
+    @apply bg-gradient-to-b from-red-500 to-red-700;
+  }
+
+  .gradient-green {
+    @apply bg-gradient-to-t from-green-700 to-green-500;
+  }
+
+  .white {
+    @apply fill-white text-white;
+  }
+
+  .black {
+    @apply fill-black text-black;
+  }
+}

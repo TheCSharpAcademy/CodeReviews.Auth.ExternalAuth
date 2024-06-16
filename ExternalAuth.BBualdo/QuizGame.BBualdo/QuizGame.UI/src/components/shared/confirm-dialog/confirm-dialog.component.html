@@ -1,0 +1,26 @@
+<div
+  class="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black/50"
+>
+  <div
+    class="flex w-full flex-col items-center gap-8 rounded-2xl bg-white p-4 md:w-auto md:p-10"
+  >
+    <div class="flex w-full items-center justify-between">
+      <p class="text-2xl font-bold md:text-4xl">{{ title }}</p>
+      <button
+        (click)="close()"
+        class="flex items-center justify-center rounded-full border border-red-500 hover:text-red-500 md:h-10 md:w-10"
+      >
+        <mat-icon fontIcon="close" class="md:scale-150" />
+      </button>
+    </div>
+    <div class="flex flex-col items-center gap-4 md:gap-10">
+      <p class="text-center text-xl font-bold md:text-3xl">
+        Are you sure you want to delete '{{ itemName }}'?
+      </p>
+      <div class="flex items-center gap-4 md:gap-10">
+        <button (click)="close()" class="btn tertiary-btn">No</button>
+        <button (click)="confirm()" class="btn warning-btn">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>

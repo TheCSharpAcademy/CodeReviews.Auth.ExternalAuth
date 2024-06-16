@@ -1,0 +1,51 @@
+<h1 class="text-center text-2xl font-bold md:text-4xl">Select Quiz</h1>
+<div class="mt-10 flex flex-col items-center gap-10">
+  @if (isError$ | async) {
+    <app-error (retryEmitter)="retry()" />
+  }
+
+  @if (isLoading$ | async) {
+    <loading-spinner />
+  }
+
+  @if (quizzes$ | async; as quizzes) {
+    @if (quizzes.length > 0) {
+      <div class="flex flex-col items-center gap-6">
+        <div class="flex flex-col gap-4">
+          @for (quiz of quizzes; track $index) {
+            <button
+              (click)="setSelectedQuiz(quiz)"
+              class="btn quiz-btn"
+              [ngClass]="{
+                'gradient-purple-reversed scale-110 text-white':
+                  selectedQuizId == quiz.quizId
+              }"
+            >
+              {{ quiz.name }}
+            </button>
+          }
+        </div>
+
+        <div class="mt-4 flex items-center gap-4">
+          <button (click)="back()" class="btn tertiary-btn">Back</button>
+          <button
+            (click)="next()"
+            class="btn secondary-btn disabled:opacity:50"
+            [disabled]="!selectedQuizId"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    } @else {
+      <div>
+        <p
+          class="gradient-purple bg-clip-text text-center text-2xl font-black uppercase text-transparent md:text-4xl"
+        >
+          There is no quizzes yet.
+        </p>
+        <a routerLink="./create" class="btn secondary-btn">Create Quiz</a>
+      </div>
+    }
+  }
+</div>

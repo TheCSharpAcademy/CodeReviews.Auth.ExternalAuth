@@ -1,0 +1,73 @@
+<div class="flex h-screen flex-col">
+  <div class="h-15 flex w-full items-start">
+    <back-button class="white p-2" previousPageName="Main Menu" />
+  </div>
+  <div class="flex flex-grow flex-col items-center justify-center gap-10">
+    <router-outlet />
+    <div class="flex flex-col items-center gap-4 text-white">
+      <p class="md:text-xl">Or use one of the following providers:</p>
+      <div class="flex w-full items-center justify-center gap-4 md:gap-10">
+        <button
+          (click)="loginWithFacebook()"
+          class="cursor-pointer transition-all duration-200 hover:scale-125"
+        >
+          <img
+            alt=""
+            class="xs:max-md:h-6"
+            height="40"
+            ngSrc="assets/facebook.svg"
+            width="40"
+          />
+        </button>
+        <button
+          (click)="loginWithGoogle()"
+          class="cursor-pointer transition-all duration-200 hover:scale-125"
+        >
+          <img
+            alt=""
+            class="xs:max-md:h-6"
+            height="40"
+            ngSrc="assets/google.svg"
+            width="40"
+          />
+        </button>
+        <button
+          (click)="loginWithGithub()"
+          class="cursor-pointer transition-all duration-200 hover:scale-125"
+        >
+          <img
+            alt=""
+            class="xs:max-md:h-6"
+            height="40"
+            ngSrc="assets/github.svg"
+            width="40"
+          />
+        </button>
+        <button
+          (click)="loginWithMicrosoft()"
+          class="cursor-pointer transition-all duration-200 hover:scale-125"
+        >
+          <img
+            alt=""
+            class="xs:max-md:h-6"
+            height="40"
+            ngSrc="assets/microsoft.svg"
+            width="40"
+          />
+        </button>
+        <button
+          (click)="loginWithTwitter()"
+          class="cursor-pointer transition-all duration-200 hover:scale-125"
+        >
+          <img
+            alt=""
+            class="xs:max-md:h-6"
+            height="40"
+            ngSrc="assets/twitter.svg"
+            width="40"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

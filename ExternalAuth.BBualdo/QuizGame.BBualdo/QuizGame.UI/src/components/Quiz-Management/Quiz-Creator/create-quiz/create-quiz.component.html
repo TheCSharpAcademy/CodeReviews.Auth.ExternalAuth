@@ -1,0 +1,71 @@
+<form
+  (ngSubmit)="proceed()"
+  [formGroup]="quizInfoFormGroup"
+  class="flex flex-col gap-10 md:gap-16"
+>
+  <h1 class="text-center text-2xl font-bold md:text-4xl">Quiz Creator</h1>
+  <div class="flex flex-col gap-8 md:gap-10">
+    <div class="relative flex flex-col gap-1 md:mx-auto md:items-center">
+      <label class="md:text-xl" for="name">Quiz Name</label>
+      <input
+        [ngClass]="{
+          'input-error':
+            quizInfoFormGroup.controls['name'].touched &&
+            quizInfoFormGroup.controls['name'].errors
+        }"
+        autocomplete="off"
+        class="input"
+        formControlName="name"
+        id="name"
+        placeholder="Example"
+        type="text"
+      />
+      @if (quizInfoFormGroup.controls["name"].touched &&
+      quizInfoFormGroup.controls["name"].errors) {
+        <div class="absolute -bottom-7 left-0 flex flex-col gap-1">
+          @if (quizInfoFormGroup.controls["name"].errors!["minlength"] ||
+          quizInfoFormGroup.controls["name"].errors!["maxlength"]) {
+            <p class="text-red-500 md:text-lg">
+              Must be between 3 and 50 characters
+            </p>
+          }
+          @if (quizInfoFormGroup.controls["name"].errors!["required"]) {
+            <p class="text-red-500 md:text-lg">Required field</p>
+          }
+        </div>
+      }
+    </div>
+    <div class="relative flex flex-col gap-1 md:mx-auto md:items-center">
+      <label for="questionsAmount">Number of Questions</label>
+      <input
+        [min]="5"
+        [ngClass]="{
+          'input-error':
+            quizInfoFormGroup.controls['questionsAmount'].touched &&
+            quizInfoFormGroup.controls['questionsAmount'].errors
+        }"
+        class="input"
+        formControlName="questionsAmount"
+        id="questionsAmount"
+        placeholder="5-10"
+        type="number"
+      />
+      @if (quizInfoFormGroup.controls["questionsAmount"].touched &&
+      quizInfoFormGroup.controls["questionsAmount"].errors) {
+        <div class="absolute -bottom-7 left-0 flex flex-col gap-1">
+          @if (quizInfoFormGroup.controls["questionsAmount"].errors!["min"] ||
+          quizInfoFormGroup.controls["questionsAmount"].errors!["max"]) {
+            <p class="text-red-500 md:text-lg">Must be between 5 and 10</p>
+          }
+          @if (quizInfoFormGroup.controls["questionsAmount"].errors!["required"]) {
+            <p class="text-red-500 md:text-lg">Required field</p>
+          }
+        </div>
+      }
+    </div>
+  </div>
+  <div class="flex items-center justify-center gap-4">
+    <a class="btn tertiary-btn" routerLink="..">Back</a>
+    <button class="btn secondary-btn" type="submit">Next</button>
+  </div>
+</form>

@@ -1,0 +1,17 @@
+<h1 class="text-center text-2xl font-bold md:text-4xl">Results</h1>
+<div class="mt-10 flex flex-col items-center gap-10">
+  <div class="flex flex-col items-center gap-4">
+    <h2
+      class="gradient-purple bg-clip-text text-center text-2xl font-black uppercase text-transparent md:text-4xl"
+    >
+      {{ summaryText }} {{ game!.username }}!
+    </h2>
+    <p class="text-center text-xl md:text-3xl">
+      Your score is <span class="font-bold">{{ game!.score }}%</span>!
+    </p>
+  </div>
+  <div class="mt-4 flex flex-col items-center gap-4">
+    <button (click)="playAgain()" class="btn primary-btn">Play Again</button>
+    <button (click)="mainMenu()" class="btn secondary-btn">Main Menu</button>
+  </div>
+</div>
