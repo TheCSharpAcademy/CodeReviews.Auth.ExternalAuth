@@ -1,0 +1,140 @@
+<form
+  (ngSubmit)="submit()"
+  [formGroup]="registerForm"
+  class="flex flex-1 flex-grow flex-col items-center justify-center gap-10"
+>
+  <div class="flex md:w-1/4 flex-col gap-4">
+    <div class="relative flex flex-col gap-1">
+      <label class="text-white md:text-xl" for="username">Username</label>
+      <input
+        [ngClass]="{
+          'input-error':
+            registerForm.controls['username'].touched &&
+            registerForm.controls['username'].errors
+        }"
+        class="input bg-white/50"
+        formControlName="username"
+        id="username"
+        maxlength="40"
+        minlength="6"
+        type="text"
+      />
+      @if (registerForm.controls["username"].touched &&
+      registerForm.controls["username"].errors) {
+        <div class="left-0 w-full flex-col gap-1">
+          @if (registerForm.controls["username"].errors!["required"]) {
+            <p class="font-bold text-red-500 md:text-lg">Required field</p>
+          }
+          @if (registerForm.controls["username"].errors!["minlength"] ||
+          registerForm.controls["username"].errors!["maxlength"]) {
+            <p class="font-bold text-red-500 md:text-lg">
+              Must be between 6 and 40 characters
+            </p>
+          }
+        </div>
+      }
+    </div>
+    <div class="relative flex flex-col gap-1">
+      <label class="text-white md:text-xl" for="email">Email</label>
+      <input
+        [ngClass]="{
+          'input-error':
+            registerForm.controls['email'].touched &&
+            registerForm.controls['email'].errors
+        }"
+        class="input bg-white/50"
+        formControlName="email"
+        id="email"
+        type="email"
+      />
+      @if (registerForm.controls["email"].touched &&
+      registerForm.controls["email"].errors) {
+        <div class="left-0 w-full flex-col gap-1">
+          @if (registerForm.controls["email"].errors!["required"]) {
+            <p class="font-bold text-red-500 md:text-lg">Required field</p>
+          }
+          @if (registerForm.controls["email"].errors!["invalidEmail"]) {
+            <p class="font-bold text-red-500 md:text-lg">Invalid email</p>
+          }
+        </div>
+      }
+    </div>
+    <div class="relative flex flex-col gap-1">
+      <label class="text-white md:text-xl" for="password">Password</label>
+      <input
+        [ngClass]="{
+          'input-error':
+            registerForm.controls['password'].touched &&
+            registerForm.controls['password'].errors
+        }"
+        class="input bg-white/50"
+        formControlName="password"
+        id="password"
+        type="password"
+      />
+      @if (registerForm.controls["password"].touched &&
+      registerForm.controls["password"].errors) {
+        <div class="left-0 w-full flex-col gap-1">
+          @if (registerForm.controls["password"].errors!["required"]) {
+            <p class="font-bold text-red-500 md:text-lg">Required field</p>
+          }
+          @if (registerForm.controls["password"].errors!["minlength"]) {
+            <p class="font-bold text-red-500 md:text-lg">
+              Password must be at least 6 characters long.
+            </p>
+          }
+          @if (registerForm.controls["password"].errors!["invalidPassword"]) {
+            <p class="font-bold text-red-500 md:text-lg">
+              Password must have at least: 1 lowercase, 1 special character, 1
+              digit
+            </p>
+          }
+        </div>
+      }
+    </div>
+    <div class="relative flex flex-col gap-1">
+      <label class="text-white md:text-xl" for="confirmPassword"
+      >Confirm Password</label
+      >
+      <input
+        [ngClass]="{
+          'input-error':
+            (registerForm.controls['confirmPassword'].touched &&
+              registerForm.controls['confirmPassword'].errors) ||
+            registerForm.errors
+        }"
+        class="input bg-white/50"
+        formControlName="confirmPassword"
+        id="confirmPassword"
+        type="password"
+      />
+      @if ((registerForm.controls["confirmPassword"].touched &&
+        registerForm.controls["confirmPassword"].errors) ||
+      registerForm.errors) {
+        <div class="left-0 w-full flex-col gap-1">
+          @if (registerForm.controls["confirmPassword"].errors!["required"]) {
+            <p class="font-bold text-red-500 md:text-lg">Required field</p>
+          }
+          @if (registerForm.errors?.["passwordMatchError"]) {
+            <p class="font-bold text-red-500 md:text-lg">
+              Password does not match
+            </p>
+          }
+        </div>
+      }
+    </div>
+  </div>
+  <div class="flex flex-col items-center gap-4">
+    <button class="btn login-btn">Sign Up</button>
+    <div>
+      <p class="text-white md:text-xl">
+        Already have an account?
+        <a
+          class="cursor-pointer font-bold transition-all duration-200 hover:text-amber-300"
+          routerLink="../login"
+        >Sign in</a
+        >
+      </p>
+    </div>
+  </div>
+</form>

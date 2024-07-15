@@ -1,0 +1,28 @@
+<h1 class="text-center text-2xl font-bold md:text-4xl">Enter Username</h1>
+<div class="flex flex-col items-center gap-10">
+  <div class="relative mt-6">
+    <input
+      [formControl]="username"
+      [ngClass]="{ 'input-error': username.touched && username.errors }"
+      class="input"
+      maxlength="50"
+      placeholder="Cool Username"
+      type="text"
+    />
+    @if (username.touched && username.errors) {
+      <div class="absolute -bottom-7">
+        @if (username.errors?.["required"]) {
+          <p class="text-red-500 md:text-lg">Required field</p>
+        }
+        @if (username.errors?.["maxlength"]) {
+          <p class="text-red-500 md:text-lg">
+            Can't be longer than 50 characters.
+          </p>
+        }
+      </div>
+    }
+  </div>
+  <div class="flex items-center gap-4">
+    <button (click)="proceed()" class="btn secondary-btn">Next</button>
+  </div>
+</div>

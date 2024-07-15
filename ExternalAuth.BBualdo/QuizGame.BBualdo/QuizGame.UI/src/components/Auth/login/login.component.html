@@ -1,0 +1,84 @@
+<form
+  (ngSubmit)="submit()"
+  [formGroup]="loginForm"
+  class="flex flex-grow flex-col items-center justify-center gap-10 w-full"
+>
+  <div class="flex flex-col gap-4 md:w-1/4">
+    <div class="relative flex flex-col gap-1">
+      <label class="text-white md:text-xl" for="username">Username</label>
+      <input
+        [ngClass]="{
+          'input-error':
+            loginForm.controls['username'].touched &&
+            loginForm.controls['username'].errors
+        }"
+        class="input bg-white/50"
+        formControlName="username"
+        id="username"
+        maxlength="40"
+        minlength="6"
+        type="text"
+      />
+      @if (loginForm.controls["username"].touched &&
+      loginForm.controls["username"].errors) {
+        <div class="left-0 w-full flex-col gap-1">
+          @if (loginForm.controls["username"].errors!["required"]) {
+            <p class="font-bold text-red-500 md:text-lg">Required field</p>
+          }
+          @if (loginForm.controls["username"].errors!["minlength"] ||
+          loginForm.controls["username"].errors!["maxlength"]) {
+            <p class="font-bold text-red-500 md:text-lg">
+              Must be between 6 and 40 characters
+            </p>
+          }
+        </div>
+      }
+    </div>
+    <div class="relative flex flex-col gap-1">
+      <label class="text-white md:text-xl" for="password">Password</label>
+      <input
+        [ngClass]="{
+          'input-error':
+            loginForm.controls['password'].touched &&
+            loginForm.controls['password'].errors
+        }"
+        class="input bg-white/50"
+        formControlName="password"
+        id="password"
+        type="password"
+      />
+      @if (loginForm.controls["password"].touched &&
+      loginForm.controls["password"].errors) {
+        <div class="left-0 w-full flex-col gap-1">
+          @if (loginForm.controls["password"].errors!["required"]) {
+            <p class="font-bold text-red-500 md:text-lg">Required field</p>
+          }
+          @if (loginForm.controls["password"].errors!["minlength"]) {
+            <p class="font-bold text-red-500 md:text-lg">
+              Password must be at least 6 characters long.
+            </p>
+          }
+          @if (loginForm.controls["password"].errors!["invalidPassword"]) {
+            <p class="font-bold text-red-500 md:text-lg">
+              Password must have at least: 1 lowercase, 1 special character, 1
+              digit
+            </p>
+          }
+        </div>
+      }
+    </div>
+  </div>
+  <div class="flex flex-col items-center gap-4">
+    <button class="btn login-btn">Login</button>
+    <div>
+      <p class="text-white md:text-xl">
+        No account yet?
+        <a
+          class="cursor-pointer font-bold transition-all duration-200 hover:text-amber-300"
+          routerLink="../register"
+        >Sign up</a
+        >
+      </p>
+    </div>
+  </div>
+</form>

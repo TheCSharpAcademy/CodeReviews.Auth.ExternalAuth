@@ -1,0 +1,32 @@
+<div
+  class="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black/50"
+>
+  <div
+    class="flex w-full flex-col items-center gap-8 rounded-2xl bg-white p-4 md:w-auto md:px-10"
+  >
+    <div class="flex w-full items-center justify-between">
+      <p class="text-2xl font-bold md:text-4xl">Answers</p>
+      <button
+        (click)="close()"
+        class="flex items-center justify-center rounded-full border border-red-500 hover:text-red-500 md:h-10 md:w-10"
+      >
+        <mat-icon fontIcon="close" class="md:scale-150" />
+      </button>
+    </div>
+    <div class="flex flex-col items-center gap-4">
+      <p class="text-center text-2xl font-bold md:text-4xl">
+        {{ question.name }}
+      </p>
+      <div class="flex flex-col items-center md:gap-2">
+        @for (answer of question.answers; track $index) {
+          <p
+            class="text-lg font-bold md:text-2xl"
+            [ngClass]="{ 'text-green-500': answer.isCorrect }"
+          >
+            {{ answer.name }}
+          </p>
+        }
+      </div>
+    </div>
+  </div>
+</div>
