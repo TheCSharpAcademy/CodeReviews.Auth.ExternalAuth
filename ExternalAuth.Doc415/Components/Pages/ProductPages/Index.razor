@@ -1,0 +1,79 @@
+﻿@using Microsoft.FluentUI.AspNetCore.Components
+@page "/products"
+@rendermode InteractiveServer
+@inject ProductManagement.Data.ApplicationDbContext DB
+@using ProductManagement.Models
+@using Microsoft.AspNetCore.Authorization
+@inject NavigationManager navManager
+
+@attribute [Authorize]
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="products/create">Create New</a>
+</p>
+
+
+<FluentDataGrid Items="@DB.Products" style="width: 900px;">
+    
+    <Microsoft.FluentUI.AspNetCore.Components.TemplateColumn Sortable="true" SortBy="@sortByName" Title="Name">
+       <div class="flex items-center">
+            <strong>@context.Name</strong>
+       </div>
+    </Microsoft.FluentUI.AspNetCore.Components.TemplateColumn>
+
+    <Microsoft.FluentUI.AspNetCore.Components.TemplateColumn Sortable="true" Title="Price">
+        <div class="flex items-center">
+            <strong>@string.Format("{0:0.000}",context.Price)</strong>
+        </div>
+    </Microsoft.FluentUI.AspNetCore.Components.TemplateColumn>
+    
+    
+    <Microsoft.FluentUI.AspNetCore.Components.TemplateColumn Sortable="true"  Title="Date Added">
+        <div class="flex items-center">
+            <strong>@context.DateAdded.ToShortDateString()</strong>
+        </div>
+    </Microsoft.FluentUI.AspNetCore.Components.TemplateColumn>
+
+    <Microsoft.FluentUI.AspNetCore.Components.TemplateColumn Sortable="true" Title="Is Active">
+        <div class="flex items-center">
+            <strong>@context.IsActive</strong>
+        </div>
+    </Microsoft.FluentUI.AspNetCore.Components.TemplateColumn>
+    
+    <Microsoft.FluentUI.AspNetCore.Components.TemplateColumn  Title="Management">
+        <div class="flex items-right">
+             <FluentButton Appearance="Appearance.Accent" @onclick="@(() => UpdateProduct(context.Id))">Update</FluentButton>
+        <FluentButton Appearance="Appearance.Accent" @onclick="@(() => DeleteProduct(context.Id))">Delete</FluentButton>
+        </div>
+    </Microsoft.FluentUI.AspNetCore.Components.TemplateColumn>
+
+
+</FluentDataGrid>
+
+@code {
+    string message = string.Empty;
+    IQueryable<Product> Products;
+
+    GridSort<Product> sortByName = GridSort<Product>
+        .ByAscending(p => p.Name)
+        .ThenAscending(p => p.DateAdded);
+
+    private async Task OnInitializedAsync()
+    {
+        Products = DB.Products;
+    }
+
+    private async Task UpdateProduct(int Id)
+    {
+        navManager.NavigateTo($"products/edit?id={Id}");
+    }
+
+    private async Task DeleteProduct(int Id)
+    {
+        navManager.NavigateTo($"products/delete?id={Id}");
+    }
+
+}
