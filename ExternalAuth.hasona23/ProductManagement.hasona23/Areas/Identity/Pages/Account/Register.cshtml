@@ -1,0 +1,119 @@
+﻿@page
+@using ProductManagement.hasona23.Constants
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Register</h1>
+
+<div class="d-grid">
+    <div style="place-items: center">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2>Hi Nice to meet you</h2>
+            <hr/>
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.UserName" class="form-control" autocomplete="username" aria-required="true"
+                       placeholder="name@example.com"/>
+                <label asp-for="Input.UserName">User Name:</label>
+                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true"
+                       placeholder="name@example.com"/>
+                <label asp-for="Input.Email">Email:</label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true"
+                       placeholder="password"/>
+                <label asp-for="Input.Password">Password:</label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password"
+                       aria-required="true" placeholder="password"/>
+                <label asp-for="Input.ConfirmPassword">Confirm Password:</label>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="mb-3" style="display: flex;align-items: center;justify-content: center">
+                <div class="btn-group " role="group" aria-label="Basic radio toggle button group">
+                    @foreach (var role in Roles.GetAllRoles())
+                    {
+                        <input type="radio" 
+                               class="btn-check" 
+                               id="role_@role" 
+                               name="Input.Role" 
+                               value="@role" 
+                               asp-for="Input.Role">
+                        <label class="btn btn-outline-primary" for="role_@role" asp-for="Input.Role">@role</label>
+                    }
+                </div>
+                <span asp-validation-for="Input.Role" class="text-danger"></span>
+            </div>
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+        </form>
+    </div>
+    
+    <div class="d-grid" style="place-items: center ;margin-top:10px">
+        <section  style="place-items: center">
+            <h3>Use another service to register.</h3>
+            <hr/>
+            @{
+                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                {
+                    <div>
+                        <p>
+                            There are no external authentication services configured. See this <a
+                                href="https://go.microsoft.com/fwlink/?LinkID=532715">article
+                                about setting up this ASP.NET application to support logging in via external
+                                services</a>.
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl"
+                          method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <button type="submit" class="btn btn-dark" name="provider" value="@provider.Name"
+                                            title="Log in using your @provider.DisplayName account"> @switch (provider.DisplayName.ToLower())
+                                        {
+                                            case "google":
+                                                <i class="fa-brands fa-google"></i>
+                                                break;
+                                            case "facebook":
+                                                <i class="fa-brands fa-facebook"></i>
+                                                break;
+                                            case "github":
+                                                <i class="fa-brands fa-github"></i>
+                                                break;
+                                            case "twitter":
+                                                <i class="fa-brands fa-twitter"></i>
+                                                break;
+                                            case "microsoft":
+                                                <i class="fa-brands fa-microsoft"></i>
+                                                break;
+                                            default:
+                                                @Html.DisplayText(provider.DisplayName)
+                                                break;
+                                        }</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}
