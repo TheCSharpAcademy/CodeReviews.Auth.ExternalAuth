@@ -1,0 +1,67 @@
+﻿@model Promise.ProductManagementSystem.ViewModels.ProductViewModel
+@{
+    ViewData["Title"] = "Products Page";
+}
+@if (Model.Products == null || !Model.Products.Any())
+{
+    <div class="alert alert-warning">
+        <strong>No products found.</strong> Please add some products to see them listed here.
+        <br />
+        <div class="text-center mt-3">
+            <a asp-action="Create" class="btn btn-primary">Add New Product</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <strong>Products found:</strong> @Model.Products.Count
+    </div>
+    
+    <div class="text-center">
+        <h1 class="display-4">Products</h1>
+        <p>Welcome to the Products page!</p>
+        <p>Here you can find a list of our products.</p>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Active</th>
+                    <th>Date Added</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model.Products)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => product.Name)</td>
+                        <td>@Html.DisplayFor(modelItem => product.Description)</td>
+                        <td>@Html.DisplayFor(modelItem => product.Price)</td>
+                        <td>
+                            @if (product.IsActive)
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactive</span>
+                            }
+                        </td>
+                        <td>@product.DateAdded.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@product.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@product.Id">Details</a> |
+                            <form asp-action="Delete" asp-route-id="@product.Id" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-link p-0 m-0 align-baseline">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,66 @@
+﻿@model Promise.ProductManagementSystem.Areas.Admin.ViewModels.StaffViewModel
+@{
+    ViewData["Title"] = "Staff Management";
+}
+<h1 class="text-center">Staff Management</h1>
+
+@if (Model.StaffUsers == null || !Model.StaffUsers.Any())
+{
+    <div class="alert alert-warning">
+        <strong>No staff members found.</strong> Please add some staff members to see them listed here.
+        <br />
+        <div class="text-center mt-3">
+            <a asp-area="Admin" asp-action="Create" class="btn btn-primary">Add New Staff Member</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <strong>Staff members found:</strong> @Model.StaffUsers.Count
+    </div>
+    <div class="text-center">
+        <h2>Staff Members</h2>
+        <p>Welcome to the Staff Management page! Here you can find a list of our staff members.</p>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Email Confirmed</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var staff in Model.StaffUsers)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => staff.UserName)</td>
+                    <td>@Html.DisplayFor(modelItem => staff.Email)</td>
+                    <td>
+                        @if (staff.EmailConfirmed)
+                        {
+                            <span class="badge bg-success">Confirmed</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Unconfirmed</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-area="Admin" asp-route-id="@staff.Id">Edit</a> |
+                        <a asp-action="Details" asp-area="Admin" asp-route-id="@staff.Id">Details</a> |
+                        <form asp-action="Delete" asp-area="Admin" asp-route-id="@staff.Id" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-link p-0 m-0 align-baseline">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="text-center mt-3">
+        <a asp-area="Admin" asp-action="Create" class="btn btn-primary">Add New Staff Member</a>
+    </div>
+}
